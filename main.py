@@ -11,7 +11,7 @@ def parse_flow(path):
             meter = flow[i].strip().split('|')
             reading = flow[i + 1].strip().split('|')  # Meter and Readings come in pairs so this shouldn't cause errors.
 
-            # Processing data
+            # Process data
             meter_id = int(meter[1])
             reading_id = int(reading[1])
             reading_value = float(reading[2])
@@ -26,5 +26,29 @@ def parse_flow(path):
 
     return data
 
+# Console Outputs
 
-print(parse_file('meter_readings'))
+
+def meter_count(data):
+    return len(data)
+
+
+def total_sum_valid_readings(flow):
+    print()
+
+
+def total_sum_invalid_readings(flow):
+    print()
+
+
+def highest_and_lowest_valid_readings(flow):
+    print()
+
+
+def most_recent_and_oldest_readings(flow):
+    print()
+
+
+print(parse_flow('meter_readings'))
+flow_data = parse_flow('meter_readings')
+print("Count of meters:", meter_count(flow_data))
