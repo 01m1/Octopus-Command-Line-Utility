@@ -65,12 +65,15 @@ def most_recent_and_oldest_readings(data):
     return [max(reading_dates), min(reading_dates)]
 
 
-print(parse_flow('meter_readings'))
-flow_data = parse_flow('meter_readings')
-print("Count of meters:", meter_count(flow_data))
-print("Total sum of valid meter readings:", total_sum_valid_readings(flow_data))
-print("Total sum of invalid meter readings:", total_sum_invalid_readings(flow_data))
-print("Highest valid meter reading:", highest_and_lowest_valid_readings(flow_data)[0])
-print("Lowest valid meter reading:", highest_and_lowest_valid_readings(flow_data)[1])
-print("Most recent meter reading:", most_recent_and_oldest_readings(flow_data)[0])
-print("Oldest meter reading:", most_recent_and_oldest_readings(flow_data)[1])
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Process flow and output result,")
+    parser.add_argument("file_path", type=str, help="File path of the flow file.")
+    args = parser.parse_args()
+    flow_data = parse_flow('meter_readings')
+    print("Count of meters:", meter_count(flow_data))
+    print("Total sum of valid meter readings:", total_sum_valid_readings(flow_data))
+    print("Total sum of invalid meter readings:", total_sum_invalid_readings(flow_data))
+    print("Highest valid meter reading:", highest_and_lowest_valid_readings(flow_data)[0])
+    print("Lowest valid meter reading:", highest_and_lowest_valid_readings(flow_data)[1])
+    print("Most recent meter reading:", most_recent_and_oldest_readings(flow_data)[0])
+    print("Oldest meter reading:", most_recent_and_oldest_readings(flow_data)[1])
