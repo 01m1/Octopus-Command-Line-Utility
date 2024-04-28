@@ -24,7 +24,7 @@ def parse_flow(path):
             if meter_id not in data:
                 data[meter_id] = {}
             data[meter_id][reading_id] = {"READING_VALUE": reading_value,
-                                          "DATE": reading_date,
+                                          "READING_DATE": reading_date,
                                           "READING_STATUS": reading_status}
 
     return data
@@ -59,7 +59,10 @@ def highest_and_lowest_valid_readings(data):
 
 
 def most_recent_and_oldest_readings(data):
-    print()
+    reading_dates = [reading["READING_DATE"] for meter in data.values()
+                     for reading in meter.values()]
+
+    return [max(reading_dates), min(reading_dates)]
 
 
 print(parse_flow('meter_readings'))
@@ -69,3 +72,5 @@ print("Total sum of valid meter readings:", total_sum_valid_readings(flow_data))
 print("Total sum of invalid meter readings:", total_sum_invalid_readings(flow_data))
 print("Highest valid meter reading:", highest_and_lowest_valid_readings(flow_data)[0])
 print("Lowest valid meter reading:", highest_and_lowest_valid_readings(flow_data)[1])
+print("Most recent meter reading:", most_recent_and_oldest_readings(flow_data)[0])
+print("Oldest meter reading:", most_recent_and_oldest_readings(flow_data)[1])
