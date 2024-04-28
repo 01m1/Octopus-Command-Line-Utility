@@ -2,7 +2,7 @@ Name: Osiroyame (Osi) Mayungbo
 
 Email: osimayungbo@gmail.com
 
-Thank You very much for giving me the opportunity to take part in this coding challenge.
+Thank You very much for giving me the opportunity to take part in this programming exercise.
 
 I had a lot of fun developing this command line utility and hope to be able to do more stuff like this.
 
