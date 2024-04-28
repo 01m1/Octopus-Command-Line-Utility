@@ -95,7 +95,6 @@ if __name__ == "__main__":
     print("+-----------------------------------------------------------------+")
     print(" Flow Data")
     print("\n")
-
     print(" Number of Meters:", meter_count(flow_data))
 
     print("\n Total sum of valid meter readings:", total_sum_valid_readings(flow_data))
@@ -110,5 +109,4 @@ if __name__ == "__main__":
     print("\n Oldest valid meter reading:", most_recent_and_oldest_readings(flow_data)[2],
           "\n Reading ID(s):", most_recent_and_oldest_readings(flow_data)[3])
     print("\n")
-
     print("+-----------------------------------------------------------------+")
