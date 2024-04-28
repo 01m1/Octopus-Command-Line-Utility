@@ -49,11 +49,16 @@ def total_sum_invalid_readings(data):
                for reading in meter.values() if reading['READING_STATUS'] == 'F')
 
 
-def highest_and_lowest_valid_readings(flow):
-    print()
+def highest_and_lowest_valid_readings(data):
+    # Iterate through reading dictionaries inside meter dictionary to create a list of valid readings
+    valid_readings = [reading["READING_VALUE"] for meter in data.values()
+                      for reading in meter.values() if reading["READING_STATUS"] == "V"]
+
+    # No need to check if file actually has valid readings as notes say to assume file conforms to the schema supplied.
+    return [max(valid_readings), min(valid_readings)]
 
 
-def most_recent_and_oldest_readings(flow):
+def most_recent_and_oldest_readings(data):
     print()
 
 
@@ -62,3 +67,5 @@ flow_data = parse_flow('meter_readings')
 print("Count of meters:", meter_count(flow_data))
 print("Total sum of valid meter readings:", total_sum_valid_readings(flow_data))
 print("Total sum of invalid meter readings:", total_sum_invalid_readings(flow_data))
+print("Highest valid meter reading:", highest_and_lowest_valid_readings(flow_data)[0])
+print("Lowest valid meter reading:", highest_and_lowest_valid_readings(flow_data)[1])
