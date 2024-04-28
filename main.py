@@ -55,18 +55,28 @@ def highest_and_lowest_valid_readings(data):
                       for reading in readings if readings[reading]["READING_STATUS"] == "V"]
 
     # No need to check if file actually has valid readings as notes say to assume file conforms to the schema supplied.
-    highest_value, highest_meter_id = max(valid_readings)
-    lowest_value, lowest_meter_id = min(valid_readings)
-    return highest_value, highest_meter_id, lowest_value, lowest_meter_id
+    highest_value = max(valid_readings)[0]
+    lowest_value = min(valid_readings)[0]
+    highest_value_ids = find_occurrences(data, 'READING_VALUE', highest_value)
+    lowest_value_ids = find_occurrences(data, 'READING_VALUE', lowest_value)
+
+    return highest_value, highest_value_ids, lowest_value, lowest_value_ids
 
 
 def most_recent_and_oldest_readings(data):
     all_readings = [(readings[reading]["READING_DATE"], meter_id) for meter_id, readings in data.items()
                     for reading in readings]
 
-    newest_date, newest_meter_id = max(all_readings)
-    oldest_value, oldest_meter_id = min(all_readings)
-    return newest_date, newest_meter_id, oldest_value, oldest_meter_id
+    newest_date = max(all_readings)[0]
+    oldest_date = min(all_readings)[0]
+    newest_meter_ids = find_occurrences(data, 'READING_DATE', newest_date)
+    oldest_meter_ids = find_occurrences(data, 'READING_DATE', oldest_date)
+    return newest_date, newest_meter_ids, oldest_date, oldest_meter_ids
+
+
+def find_occurrences(data, key, value):
+    return [meter_id for meter_id, data_items in data.items()
+            for data_item in data_items if data_items[data_item][key] == value]
 
 
 if __name__ == "__main__":
@@ -75,19 +85,22 @@ if __name__ == "__main__":
     args = parser.parse_args()
     flow_data = parse_flow('meter_readings')
     print("+-----------------------------------------------------------------+")
-    print("Flow Data")
+    print(" Flow Data")
     print("\n")
-    print("Count of meters:", meter_count(flow_data))
-    print("Total sum of valid meter readings:", total_sum_valid_readings(flow_data))
-    print("Total sum of invalid meter readings:", total_sum_invalid_readings(flow_data))
-    print("Highest valid meter reading id:", highest_and_lowest_valid_readings(flow_data)[1],
-          f"({highest_and_lowest_valid_readings(flow_data)[0]})")
-    print("Lowest valid meter reading id:", highest_and_lowest_valid_readings(flow_data)[3],
-          f"({highest_and_lowest_valid_readings(flow_data)[2]})")
-    print("Most recent meter reading id:", most_recent_and_oldest_readings(flow_data)[1],
-          f"({most_recent_and_oldest_readings(flow_data)[0]})")
-    print("Oldest meter reading id:", most_recent_and_oldest_readings(flow_data)[3],
-          f"({most_recent_and_oldest_readings(flow_data)[2]})")
-    print("\n")
-    print("+-----------------------------------------------------------------+")
 
+    print(" Count of meters:", meter_count(flow_data))
+
+    print("\n Total sum of valid meter readings:", total_sum_valid_readings(flow_data))
+    print("\n Total sum of invalid meter readings:", total_sum_invalid_readings(flow_data))
+
+    print("\n Highest valid meter reading:", highest_and_lowest_valid_readings(flow_data)[0],
+          "\n Meter ID(s):", highest_and_lowest_valid_readings(flow_data)[1])
+    print("\n Lowest valid meter reading:", highest_and_lowest_valid_readings(flow_data)[2],
+          "\n Meter ID(s):", highest_and_lowest_valid_readings(flow_data)[3])
+    print("\n Most recent valid meter reading:", most_recent_and_oldest_readings(flow_data)[0],
+          "\n Meter ID(s):", most_recent_and_oldest_readings(flow_data)[1])
+    print("\n Oldest valid meter reading:", most_recent_and_oldest_readings(flow_data)[2],
+          "\n Meter ID(s):", most_recent_and_oldest_readings(flow_data)[3])
+    print("\n")
+
+    print("+-----------------------------------------------------------------+")
