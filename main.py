@@ -57,6 +57,7 @@ def highest_and_lowest_valid_readings(data):
     # No need to check if file actually has valid readings as notes say to assume file conforms to the schema supplied.
     highest_value = max(valid_readings)[0]
     lowest_value = min(valid_readings)[0]
+    # Check for multiple occurrences of values
     highest_value_ids = find_occurrences(data, 'READING_VALUE', highest_value)
     lowest_value_ids = find_occurrences(data, 'READING_VALUE', lowest_value)
 
@@ -64,43 +65,50 @@ def highest_and_lowest_valid_readings(data):
 
 
 def most_recent_and_oldest_readings(data):
+    # Iterate through reading dictionaries inside meter dictionary to create a list of all readings
     all_readings = [(readings[reading]["READING_DATE"], meter_id) for meter_id, readings in data.items()
                     for reading in readings]
 
+    # No need to check if file has readings as notes say to assume file conforms to the schema supplied.
     newest_date = max(all_readings)[0]
     oldest_date = min(all_readings)[0]
+    # Check for multiple occurrences of values
     newest_meter_ids = find_occurrences(data, 'READING_DATE', newest_date)
     oldest_meter_ids = find_occurrences(data, 'READING_DATE', oldest_date)
     return newest_date, newest_meter_ids, oldest_date, oldest_meter_ids
 
 
 def find_occurrences(data, key, value):
-    return [meter_id for meter_id, data_items in data.items()
-            for data_item in data_items if data_items[data_item][key] == value]
+    # Go through whole dictionary of dictionaries to check for multiple occurrences of a value under a certain key
+    return [reading_id for meter_id, values in data.items()
+            for reading_id in values if values[reading_id][key] == value]
 
 
 if __name__ == "__main__":
+    # Parse flow as input
     parser = argparse.ArgumentParser(description="Process flow and output result,")
     parser.add_argument("file_path", type=str, help="File path of the flow file.")
     args = parser.parse_args()
-    flow_data = parse_flow('meter_readings')
+    flow_data = parse_flow(args.file_path)
+
+    # Output
     print("+-----------------------------------------------------------------+")
     print(" Flow Data")
     print("\n")
 
-    print(" Count of meters:", meter_count(flow_data))
+    print(" Number of Meters:", meter_count(flow_data))
 
     print("\n Total sum of valid meter readings:", total_sum_valid_readings(flow_data))
     print("\n Total sum of invalid meter readings:", total_sum_invalid_readings(flow_data))
 
     print("\n Highest valid meter reading:", highest_and_lowest_valid_readings(flow_data)[0],
-          "\n Meter ID(s):", highest_and_lowest_valid_readings(flow_data)[1])
+          "\n Reading ID(s):", highest_and_lowest_valid_readings(flow_data)[1])
     print("\n Lowest valid meter reading:", highest_and_lowest_valid_readings(flow_data)[2],
-          "\n Meter ID(s):", highest_and_lowest_valid_readings(flow_data)[3])
+          "\n Reading ID(s):", highest_and_lowest_valid_readings(flow_data)[3])
     print("\n Most recent valid meter reading:", most_recent_and_oldest_readings(flow_data)[0],
-          "\n Meter ID(s):", most_recent_and_oldest_readings(flow_data)[1])
+          "\n Reading ID(s):", most_recent_and_oldest_readings(flow_data)[1])
     print("\n Oldest valid meter reading:", most_recent_and_oldest_readings(flow_data)[2],
-          "\n Meter ID(s):", most_recent_and_oldest_readings(flow_data)[3])
+          "\n Reading ID(s):", most_recent_and_oldest_readings(flow_data)[3])
     print("\n")
 
     print("+-----------------------------------------------------------------+")
