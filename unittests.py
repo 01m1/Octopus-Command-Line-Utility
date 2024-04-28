@@ -5,12 +5,14 @@ from main import parse_flow, meter_count, total_sum_valid_readings, total_sum_in
 
 class UnitTest(unittest.TestCase):
     def test_meter_file(self):
+        # Check if the flow is parsed correctly
         data = parse_flow('meter_readings')
         self.assertEqual(len(data), 3)
         self.assertEqual(data[1300001188124][20200329001234]['READING_STATUS'], "F")
         self.assertEqual(data[1300001188124][2020032904567]['READING_VALUE'], 1144.0)
 
     def test_file_processing(self):
+        # Check if the data is processed correctly
         data = parse_flow('meter_readings')
         self.assertEqual(meter_count(data), 3)
         self.assertEqual(total_sum_valid_readings(data), 45639.1)
