@@ -51,18 +51,22 @@ def total_sum_invalid_readings(data):
 
 def highest_and_lowest_valid_readings(data):
     # Iterate through reading dictionaries inside meter dictionary to create a list of valid readings
-    valid_readings = [reading["READING_VALUE"] for meter in data.values()
-                      for reading in meter.values() if reading["READING_STATUS"] == "V"]
+    valid_readings = [(readings[reading]["READING_VALUE"], meter_id) for meter_id, readings in data.items()
+                      for reading in readings if readings[reading]["READING_STATUS"] == "V"]
 
     # No need to check if file actually has valid readings as notes say to assume file conforms to the schema supplied.
-    return [max(valid_readings), min(valid_readings)]
+    highest_value, highest_meter_id = max(valid_readings)
+    lowest_value, lowest_meter_id = min(valid_readings)
+    return highest_value, highest_meter_id, lowest_value, lowest_meter_id
 
 
 def most_recent_and_oldest_readings(data):
-    reading_dates = [reading["READING_DATE"] for meter in data.values()
-                     for reading in meter.values()]
+    all_readings = [(readings[reading]["READING_DATE"], meter_id) for meter_id, readings in data.items()
+                    for reading in readings]
 
-    return [max(reading_dates), min(reading_dates)]
+    newest_date, newest_meter_id = max(all_readings)
+    oldest_value, oldest_meter_id = min(all_readings)
+    return newest_date, newest_meter_id, oldest_value, oldest_meter_id
 
 
 if __name__ == "__main__":
@@ -70,10 +74,20 @@ if __name__ == "__main__":
     parser.add_argument("file_path", type=str, help="File path of the flow file.")
     args = parser.parse_args()
     flow_data = parse_flow('meter_readings')
+    print("+-----------------------------------------------------------------+")
+    print("Flow Data")
+    print("\n")
     print("Count of meters:", meter_count(flow_data))
     print("Total sum of valid meter readings:", total_sum_valid_readings(flow_data))
     print("Total sum of invalid meter readings:", total_sum_invalid_readings(flow_data))
-    print("Highest valid meter reading:", highest_and_lowest_valid_readings(flow_data)[0])
-    print("Lowest valid meter reading:", highest_and_lowest_valid_readings(flow_data)[1])
-    print("Most recent meter reading:", most_recent_and_oldest_readings(flow_data)[0])
-    print("Oldest meter reading:", most_recent_and_oldest_readings(flow_data)[1])
+    print("Highest valid meter reading id:", highest_and_lowest_valid_readings(flow_data)[1],
+          f"({highest_and_lowest_valid_readings(flow_data)[0]})")
+    print("Lowest valid meter reading id:", highest_and_lowest_valid_readings(flow_data)[3],
+          f"({highest_and_lowest_valid_readings(flow_data)[2]})")
+    print("Most recent meter reading id:", most_recent_and_oldest_readings(flow_data)[1],
+          f"({most_recent_and_oldest_readings(flow_data)[0]})")
+    print("Oldest meter reading id:", most_recent_and_oldest_readings(flow_data)[3],
+          f"({most_recent_and_oldest_readings(flow_data)[2]})")
+    print("\n")
+    print("+-----------------------------------------------------------------+")
+
