@@ -1,6 +1,4 @@
 import unittest
-import sys
-from io import StringIO
 from main import parse_flow, meter_count, total_sum_valid_readings, total_sum_invalid_readings, \
     highest_and_lowest_valid_readings, most_recent_and_oldest_readings
 
